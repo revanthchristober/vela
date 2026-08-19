@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,6 +15,10 @@ import { Container, Eyebrow, Section } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { ARTICLES, INGREDIENT_SEQUENCE, REVIEWS } from "@/data/editorial";
 import { getProducts } from "@/lib/commerce";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const [featured, rituals, all] = await Promise.all([

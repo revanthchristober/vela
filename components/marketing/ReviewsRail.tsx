@@ -19,6 +19,7 @@ export function ReviewsRail({
   return (
     <Section tone="canvas" size="base" className="border-t border-line">
       <Container>
+        <h2 className="sr-only">What people say</h2>
         <div className="flex flex-wrap items-baseline justify-between gap-4">
           <Eyebrow>What people say</Eyebrow>
           <p className="text-sm text-ink-muted">

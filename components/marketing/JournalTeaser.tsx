@@ -13,6 +13,7 @@ export function JournalTeaser({ articles }: { articles: readonly Article[] }) {
   return (
     <Section tone="canvas" size="base" className="border-t border-line">
       <Container>
+        <h2 className="sr-only">From the journal</h2>
         <Eyebrow className="mb-10">From the journal</Eyebrow>
 
         <ul className="grid gap-8 sm:grid-cols-3 sm:gap-6">

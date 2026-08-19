@@ -73,6 +73,7 @@ export function IngredientSequence({ steps }: { steps: readonly IngredientStep[]
   return (
     <section ref={root} className="border-t border-line bg-canvas-sunken py-20 sm:py-28">
       <Container>
+        <h2 className="sr-only">What is in them</h2>
         <Eyebrow className="mb-10">What is in them</Eyebrow>
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">

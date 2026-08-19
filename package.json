@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run build",
+    "test:unit": "NODE_OPTIONS=--no-experimental-webstorage vitest run",
+    "test:e2e": "playwright test",
+    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test:unit && pnpm run build",
     "placeholders": "node scripts/generate-placeholders.mjs"
   },
   "dependencies": {
@@ -25,18 +27,25 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.5",
     "@types/node": "^26.2.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "sharp": "^0.35.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11"
   },
   "packageManager": "pnpm@10.28.0",
   "description": "VELA — premium D2C wellness commerce experience. Self-initiated concept build.",
