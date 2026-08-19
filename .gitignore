@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local env
+.env*.local
+.env
+
+# Test output
+/coverage
+/playwright-report
+/test-results
+
+# OS
+.DS_Store
+
+# Keep the documented template tracked
+!.env.example
