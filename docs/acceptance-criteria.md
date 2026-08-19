@@ -194,4 +194,52 @@ wording is deliberately testable.
 - [x] Domain types and the nine-product catalogue typecheck under `strict` +
       `noUncheckedIndexedAccess`.
 - [ ] Vercel project connected with a preview deployment. _Requires the user's Vercel account._
-- [ ] GitHub repository created and pushed. _Requires the user's push._
+- [x] GitHub repository created (`revanthchristober/vela`). _Push requires the user's credentials._
+
+---
+
+## 8. Verified for Phases 2–5
+
+Checked in a real browser (Chromium, production build) rather than by reading the code.
+The script is `docs/verification/journey.mjs`; it becomes the basis of the Playwright
+suite in Phase 8.
+
+**Journey**
+
+- [x] Homepage → `/shop` → PDP navigates correctly; `/shop` lists all nine products.
+- [x] Exactly one `<h1>` per page; hero headline visible.
+- [x] Changing variant updates the buy button price (₹1,400 → ₹2,400 on the refill).
+- [x] Add to bag opens the drawer with the correct product **and the chosen variant**.
+- [x] Exactly one upsell card, drawn from `pairsWith`, never something already in the bag.
+- [x] Quantity increments in the drawer and updates the totals.
+- [x] `Escape` closes the drawer; focus returns to the trigger.
+- [x] Cart survives a full page reload.
+- [x] Unknown product slug and unknown category slug both render the 404 page.
+- [x] Sort writes to the URL and the sorted view survives a reload.
+
+**Responsive**
+
+- [x] Zero horizontal overflow at 360px on `/`, `/shop`, `/shop/rituals`,
+      `/products/[slug]`, `/story`, `/journal`, `/cart`.
+- [x] Mobile sticky buy bar appears only after the inline button is scrolled *past* —
+      not while it is merely below the fold.
+- [x] Mobile menu opens and is a real labelled `<nav>`.
+
+**Motion**
+
+- [x] With `prefers-reduced-motion: reduce`, hero text renders at full opacity and no
+      timeline is constructed.
+- [x] Scroll reveals render visible with no JavaScript, no IntersectionObserver, in
+      print, and when scrolled past faster than the observer delivers.
+
+**Console**
+
+- [x] Zero console errors or warnings across the whole journey in the production build.
+
+**Known gaps, carried forward**
+
+- [ ] Lighthouse / Core Web Vitals not yet measured — Phase 7.
+- [ ] No automated test suite yet; the checks above are a script, not a spec — Phase 8.
+- [ ] Journal article detail pages remain out of scope (§2, Optional).
+- [ ] Photography is generated placeholder art direction, not a shoot — noted in
+      `public/brand/README.md` and in the case study.

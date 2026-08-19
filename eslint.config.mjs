@@ -23,6 +23,13 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // Scripts and verification harnesses report to a terminal — console is their
+  // output device, not a leftover debug statement.
+  {
+    files: ["scripts/**/*.mjs", "docs/verification/**/*.mjs"],
+    rules: { "no-console": "off" },
+  },
+
   // Prettier last: turns off every stylistic rule that would fight the formatter.
   prettier,
 

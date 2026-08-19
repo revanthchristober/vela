@@ -12,18 +12,19 @@ _Modern rituals, engineered for everyday life._
 
 ## Status
 
-**Phase 0 (setup and quality bar) and Phase 1 (brand and UX foundation) are complete.**
-Phases 2–11 are not. Everything in this README marked _Phase n_ is planned and not yet in
-the codebase — this section exists so nothing below has to be read charitably.
+**Phases 0–5 are complete: the storefront is built and the core purchase journey works
+end to end.** Phases 6–11 (CMS, performance measurement, automated tests, polish, case
+study) are not. Anything marked _Phase n_ below is planned and not yet in the codebase —
+this section exists so nothing else in this README has to be read charitably.
 
 | Phase | | |
 | --- | --- | --- |
 | 0 · Setup & quality bar | ✅ | Repo, strict TS, lint/format, token layer, self-hosted type, `/styleguide` |
 | 1 · Brand & UX foundation | ✅ | Brand and voice, nine-product catalogue, domain types, IA, wireframes, content inventory, acceptance criteria |
-| 2 · Visual system | ◻ | |
-| 3 · Core components | ◻ | |
-| 4 · Homepage + motion | ◻ | |
-| 5 · Commerce flow | ◻ | |
+| 2 · Visual system | ✅ | Layout primitives, spacing rhythm, generated art-direction placeholders at real aspect ratios |
+| 3 · Core components | ✅ | Header with mobile sheet, footer, buttons, accordion, product card / grid / gallery, skeletons |
+| 4 · Homepage + motion | ✅ | Hero, featured, brand statement, pinned ingredient sequence, rituals, reviews, journal — GSAP + Motion |
+| 5 · Commerce flow | ✅ | Service interface + mock adapter, collection + sort, PDP with variants, cart drawer, upsell, empty/error states |
 | 6 · CMS / content | ◻ | |
 | 7 · Performance, SEO, a11y | ◻ | |
 | 8 · Testing | ◻ | |
@@ -40,8 +41,8 @@ the codebase — this section exists so nothing below has to be read charitably.
 
 ## Screenshots
 
-Phase 0 captures at 360 / 768 / 1440 are in [`docs/screenshots/`](docs/screenshots/). Full
-desktop / tablet / mobile comparisons of the finished pages land from Phase 4.
+Homepage, collection, product, cart drawer and story at 1440 and 360 are in
+[`docs/screenshots/`](docs/screenshots/), alongside the Phase 0 token-layer captures.
 
 ## Stack
 
@@ -51,37 +52,37 @@ desktop / tablet / mobile comparisons of the finished pages land from Phase 4.
 | Language | TypeScript, `strict` + `noUncheckedIndexedAccess` | in use | Type-safe component props and data contracts |
 | Styling | Tailwind CSS v4, CSS-first `@theme` | in use | One token layer, no config file, no default palette ([ADR-0002](docs/adr/0002-token-layer-with-the-default-palette-disabled.md)) |
 | Type | Fraunces + Inter, self-hosted variable woff2 | in use | ~85 KB total, hermetic build ([ADR-0003](docs/adr/0003-self-hosted-variable-fonts.md)) |
-| Commerce | Typed domain model in `lib/commerce/types.ts`; service interface and `mock` / `shopify` adapters | types in use, adapters Phase 5 | ([ADR-0001](docs/adr/0001-commerce-and-cms-data-source-abstraction.md)) |
-| Content | Same seam as commerce: local seed, Sanity adapter behind it | Phase 6 | |
-| Motion | GSAP (scroll choreography) + Motion (component and route state) | Phase 4 | Right tool per tier — see the motion table below |
+| Commerce | Typed domain model, service interface, `mock` adapter (Shopify adapter behind the same contract) | in use | ([ADR-0001](docs/adr/0001-commerce-and-cms-data-source-abstraction.md)) |
+| Content | Typed editorial seed in `data/editorial.ts`; Sanity adapter behind the same seam | seed in use, adapter Phase 6 | |
+| Motion | GSAP (hero + pinned sequence) + Motion (drawer, accordion, nav) + CSS (reveals, hover) | in use | Split by tier ([ADR-0004](docs/adr/0004-motion-split-and-a-reveal-that-degrades-to-visible.md)) |
 | Hosting | Vercel | pending | Preview deployments per branch |
 | Quality | ESLint (errors, not warnings) + Prettier + `tsc --noEmit` | in use | `pnpm verify` gates everything |
 | Testing | Vitest + Testing Library + Playwright | Phase 8 | |
 
 ## Architecture
 
-The target structure. `◻` marks a directory that exists as a placeholder and is filled in
-the phase named — this tree is the plan, not a claim about what is written.
+`◻` marks the few things not yet written; everything else exists.
 
 ```
 app/
   (marketing)/           route group — no URL segment
-    page.tsx             homepage — holding page until Phase 4
-    story/            ◻  brand story                              Phase 4
-    journal/          ◻  editorial index                          Phase 6
-  shop/               ◻  collection + [category]                  Phase 5
-  products/[slug]/    ◻  PDP                                      Phase 5
+    page.tsx             homepage
+    story/               brand story
+    journal/             editorial index (article detail out of scope, §2)
+  shop/                  collection + [category] with sort
+  products/[slug]/       PDP — gallery, buy box, ingredients, reviews
+  cart/                  server-rendered fallback for the drawer
   styleguide/            live token inventory
   fonts/                 self-hosted variable woff2 + OFL licences
 components/
-  ui/                 ◻  primitives — button, link, container, grid, sheet   Phase 3
-  commerce/           ◻  ProductCard, Gallery, VariantSelector, CartDrawer   Phase 3–5
-  marketing/          ◻  editorial sections                       Phase 4
-  layout/             ◻  header, footer, navigation               Phase 3
+  ui/                    Container, Section, Button, Accordion, Reveal
+  commerce/              ProductCard, Grid, Gallery, BuyBox, CartDrawer, Price, Rating
+  marketing/             Hero, BrandStatement, IngredientSequence, ReviewsRail, JournalTeaser
+  layout/                Header, Footer, AnnouncementBar, NewsletterForm
 lib/
-  commerce/              types.ts — the domain model
-                      ◻  index.ts + adapters/{mock,shopify}.ts    Phase 5
-  content/            ◻  editorial types + adapters               Phase 6
+  commerce/              types.ts, index.ts, adapters/mock.ts
+                      ◻  adapters/shopify.ts                      when credentials exist
+  cart/                  store.ts (external store), CartProvider, upsell
   analytics/          ◻  typed event helpers                      Phase 7
   utils/                 cn, money formatting, SEO helpers
 data/                    typed local catalogue + content seed
@@ -106,18 +107,19 @@ Four rules the codebase holds to:
 | 1 | Commerce and CMS behind a narrow typed service interface, mock adapter first | [ADR-0001](docs/adr/0001-commerce-and-cms-data-source-abstraction.md) |
 | 2 | Default Tailwind palette disabled; everything from a token layer; no dark mode | [ADR-0002](docs/adr/0002-token-layer-with-the-default-palette-disabled.md) |
 | 3 | Self-hosted variable fonts for a hermetic build and an 85 KB type system | [ADR-0003](docs/adr/0003-self-hosted-variable-fonts.md) |
-| 4 | Money is integer minor units end to end — floats never touch a price | `lib/utils/format.ts` |
+| 4 | Motion split by tier; the scroll reveal degrades to visible in every failure path | [ADR-0004](docs/adr/0004-motion-split-and-a-reveal-that-degrades-to-visible.md) |
+| 5 | Cart is an external store read with `useSyncExternalStore`, not state mirrored from localStorage | [ADR-0005](docs/adr/0005-cart-as-an-external-store.md) |
+| 6 | Money is integer minor units end to end — floats never touch a price | `lib/utils/format.ts` |
 
-Motion is split by tier rather than by preference. The libraries are added in Phase 4;
-the split is decided now so that the choice is a design decision rather than whichever
-import was already in the file:
+Motion is split by tier rather than by preference — each library is used where the other
+would need a workaround:
 
 | Tier | Example | Tool |
 | --- | --- | --- |
 | Hero choreography | Headline / image / CTA sequence | GSAP |
 | Scroll storytelling | Pinned ingredient sequence | GSAP ScrollTrigger |
-| Route transition | Page fade / slide | Motion |
 | Component state | Cart drawer, accordion, modal | Motion |
+| Scroll reveal | Section fade-up | CSS + IntersectionObserver |
 | Micro interaction | Button and card hover | CSS |
 
 A global `prefers-reduced-motion` rule collapses all transitions and animations; GSAP
@@ -134,9 +136,10 @@ Targets from the brief, measured and recorded in Phase 7:
 | INP | ≤ 200ms | _tbd_ | _tbd_ |
 | CLS | ≤ 0.1 | _tbd_ | _tbd_ |
 
-Already banked in Phase 0: two preloaded self-hosted font files with metric-adjusted
-fallbacks (no font-driven CLS), zero client JS on the current routes, and a fully static
-prerender.
+Already banked: two preloaded self-hosted font files with metric-adjusted fallbacks (no
+font-driven CLS), explicit `sizes` on every image matching the real column count per
+breakpoint, skeletons at the exact final card dimensions, and static prerendering of the
+homepage, all nine PDPs, the story and journal pages.
 
 ## Setup
 
@@ -159,6 +162,7 @@ adapter is `mock`, which reads the typed catalogue in `data/`.
 | `pnpm lint` / `pnpm lint:fix` | ESLint |
 | `pnpm format` / `pnpm format:check` | Prettier |
 | `pnpm verify` | typecheck → lint → format check → build. Run before every push. |
+| `pnpm placeholders` | Regenerate the art-direction placeholder imagery in `public/brand` |
 
 ## Environment variables
 
