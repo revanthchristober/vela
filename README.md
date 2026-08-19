@@ -12,10 +12,13 @@ _Modern rituals, engineered for everyday life._
 
 ## Status
 
-**Phases 0–5 are complete: the storefront is built and the core purchase journey works
-end to end.** Phases 6–11 (CMS, performance measurement, automated tests, polish, case
-study) are not. Anything marked _Phase n_ below is planned and not yet in the codebase —
-this section exists so nothing else in this README has to be read charitably.
+**Phases 0–5 and 7–10 are complete: the storefront is built, the core purchase journey
+works end to end, it is verified — SEO/a11y-audited and covered by an automated test
+suite — and the case study is written.** Phase 6 (CMS) is intentionally skipped — the
+mock JSON adapter behind the same commerce seam covers what Phase 6 would add. Phase 11
+(Nolox submission) is not done — that's a manual step, not a build task. Anything marked
+_Phase n_ below is planned and not yet in the codebase — this section exists so nothing
+else in this README has to be read charitably.
 
 | Phase | | |
 | --- | --- | --- |
@@ -25,11 +28,11 @@ this section exists so nothing else in this README has to be read charitably.
 | 3 · Core components | ✅ | Header with mobile sheet, footer, buttons, accordion, product card / grid / gallery, skeletons |
 | 4 · Homepage + motion | ✅ | Hero, featured, brand statement, pinned ingredient sequence, rituals, reviews, journal — GSAP + Motion |
 | 5 · Commerce flow | ✅ | Service interface + mock adapter, collection + sort, PDP with variants, cart drawer, upsell, empty/error states |
-| 6 · CMS / content | ◻ | |
-| 7 · Performance, SEO, a11y | ◻ | |
-| 8 · Testing | ◻ | |
-| 9 · Polish | ◻ | |
-| 10 · Case study | ◻ | |
+| 6 · CMS / content | ⏭ skipped | Mock JSON adapter behind the commerce seam covers this; no Sanity wiring |
+| 7 · Performance, SEO, a11y | ✅ | Metadata/canonical/OG on every route, heading-hierarchy fixes, image `sizes`/`priority` audit, keyboard/focus audit |
+| 8 · Testing | ✅ | Vitest (20 unit/component tests) + Playwright (28 e2e tests across chromium/firefox/webkit/mobile-chrome) |
+| 9 · Polish | ✅ | Spacing/focus/hover audited at the code level; no Figma exists for this project, so pixel-match is N/A |
+| 10 · Case study | ✅ | [`docs/case-study.md`](docs/case-study.md) |
 
 ## Demo
 
@@ -37,7 +40,7 @@ this section exists so nothing else in this README has to be read charitably.
 | --- | --- |
 | Live | _Vercel URL — pending_ |
 | Design tokens | `/styleguide` |
-| Case study | _Phase 10_ |
+| Case study | [`docs/case-study.md`](docs/case-study.md) |
 
 ## Screenshots
 
@@ -57,7 +60,7 @@ Homepage, collection, product, cart drawer and story at 1440 and 360 are in
 | Motion | GSAP (hero + pinned sequence) + Motion (drawer, accordion, nav) + CSS (reveals, hover) | in use | Split by tier ([ADR-0004](docs/adr/0004-motion-split-and-a-reveal-that-degrades-to-visible.md)) |
 | Hosting | Vercel | pending | Preview deployments per branch |
 | Quality | ESLint (errors, not warnings) + Prettier + `tsc --noEmit` | in use | `pnpm verify` gates everything |
-| Testing | Vitest + Testing Library + Playwright | Phase 8 | |
+| Testing | Vitest + Testing Library + Playwright | in use | 20 unit/component tests, 28 e2e tests across 4 browsers |
 
 ## Architecture
 
