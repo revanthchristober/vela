@@ -91,7 +91,7 @@
   --text-5xl--line-height: 1.05;
   --text-5xl--letter-spacing: -0.02em;
 
-  --text-6xl: clamp(3.25rem, 7.5vw + 1.25rem, 6.5rem);
+  --text-6xl: clamp(2.5rem, 7vw + 0.75rem, 6.5rem);
   --text-6xl--line-height: 0.98;
   --text-6xl--letter-spacing: -0.03em;
 
