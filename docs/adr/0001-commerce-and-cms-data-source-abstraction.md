@@ -51,6 +51,22 @@ removeFromCart(cartId, lineId): Promise<Cart>
 
 UI components import the domain types (`Product`, `Cart`, `Money`), never an adapter.
 
+> **Amendment (Phase 2–5 build):** the four cart methods above were never
+> implemented against `CommerceAdapter`, and never will be under the `mock`
+> adapter. Cart turned out not to be a commerce-service concern for a
+> client-only cart: it lives entirely in `lib/cart/` as a `useSyncExternalStore`
+> module (`lib/cart/store.ts`), decided and documented in ADR-0005. There is no
+> `Cart`/`CartLine` type in `lib/commerce/types.ts` any more — the real shape is
+> `lib/cart/types.ts`. This ADR's original four-line cart contract stays here
+> as a record of the original plan and would be the right shape to reintroduce
+> if a `shopify` adapter is ever built (a real cart has to be server-side,
+> tied to a checkout URL) — see the Shopify section below. The `lib/content/`
+> half of the Decision was similarly never built: editorial copy
+> (`data/editorial.ts`) is imported directly by pages and components rather
+> than through a content adapter seam. That's a real, acknowledged deviation
+> from this ADR, not an oversight — noted here rather than silently left to
+> look finished.
+
 ## Options Considered
 
 ### Option A: Build directly against the Shopify Storefront API

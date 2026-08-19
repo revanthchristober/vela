@@ -101,6 +101,7 @@ export function CollectionView({
           </div>
         </div>
 
+        <h2 className="sr-only">Products</h2>
         {products.length === 0 ? (
           <div className="py-24 text-center">
             <p className="font-display text-2xl">Nothing matches that combination.</p>

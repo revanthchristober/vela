@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { CollectionView } from "@/components/commerce/CollectionView";
-import { ProductGridSkeleton } from "@/components/commerce/ProductGrid";
 import {
   getCollectionBySlug,
   getCollections,
@@ -53,15 +51,13 @@ export default async function CategoryPage({
   ]);
 
   return (
-    <Suspense fallback={<ProductGridSkeleton count={3} />}>
-      <CollectionView
-        title={collection.title}
-        description={collection.description}
-        products={products}
-        collections={collections}
-        activeSlug={collection.slug}
-        sort={sort}
-      />
-    </Suspense>
+    <CollectionView
+      title={collection.title}
+      description={collection.description}
+      products={products}
+      collections={collections}
+      activeSlug={collection.slug}
+      sort={sort}
+    />
   );
 }

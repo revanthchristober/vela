@@ -39,6 +39,7 @@ export default async function HomePage() {
 
         <Section size="base">
           <Container>
+            <h2 className="sr-only">Featured products</h2>
             <div className="flex flex-wrap items-baseline justify-between gap-4">
               <Eyebrow>Start here</Eyebrow>
               <ArrowLink href="/shop">See all nine products</ArrowLink>

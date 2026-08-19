@@ -90,24 +90,8 @@ export interface Collection {
   position: number;
 }
 
-export interface CartLine {
-  id: string;
-  productSlug: string;
-  variantId: string;
-  quantity: number;
-  unitPrice: Money;
-  lineTotal: Money;
-}
-
-export interface Cart {
-  id: string;
-  lines: readonly CartLine[];
-  subtotal: Money;
-  /** Free over ₹1,500 — see data/shipping.ts. Null until an address is known. */
-  shipping: Money | null;
-  total: Money;
-  totalQuantity: number;
-}
+// Cart shape lives in `lib/cart/types.ts`, not here — see ADR-0001's amendment
+// and ADR-0005. This file stays the read-only commerce/catalogue contract.
 
 export type ProductSort = "featured" | "price-asc" | "price-desc" | "newest";
 

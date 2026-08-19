@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Price } from "@/components/commerce/Price";
 import { Button, ButtonLink } from "@/components/ui/Button";
+import { QuantitySelector } from "@/components/ui/QuantitySelector";
 import { lineTotal, useCart } from "@/lib/cart/CartProvider";
 import { formatMoney } from "@/lib/utils/format";
 
@@ -77,32 +78,11 @@ export function CartPageView() {
               </div>
 
               <div className="mt-4 flex items-center gap-5">
-                <div className="flex items-center rounded-sm border border-line">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(line.id, line.quantity - 1)}
-                    disabled={line.quantity <= 1}
-                    className="flex size-11 items-center justify-center text-ink-muted disabled:opacity-35"
-                  >
-                    <span aria-hidden="true">−</span>
-                    <span className="sr-only">
-                      Decrease quantity of {line.productTitle}
-                    </span>
-                  </button>
-                  <span className="w-8 text-center text-sm tabular-nums">
-                    {line.quantity}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setQuantity(line.id, line.quantity + 1)}
-                    className="flex size-11 items-center justify-center text-ink-muted hover:text-ink"
-                  >
-                    <span aria-hidden="true">+</span>
-                    <span className="sr-only">
-                      Increase quantity of {line.productTitle}
-                    </span>
-                  </button>
-                </div>
+                <QuantitySelector
+                  value={line.quantity}
+                  onChange={(next) => setQuantity(line.id, next)}
+                  label={line.productTitle}
+                />
                 <button
                   type="button"
                   onClick={() => removeLine(line.id)}
@@ -141,11 +121,18 @@ export function CartPageView() {
           </p>
         ) : null}
 
-        <Button fullWidth size="lg" className="mt-6">
-          Checkout
+        <Button
+          fullWidth
+          size="lg"
+          className="mt-6"
+          disabled
+          title="Checkout is out of scope for this build — see docs/acceptance-criteria.md §2"
+        >
+          Checkout — coming soon
         </Button>
         <p className="mt-3 text-xs text-ink-subtle">
-          Shipping and taxes calculated at checkout.
+          This is a portfolio build: checkout isn&rsquo;t wired up. Everything up to the
+          bag is fully functional.
         </p>
       </aside>
     </div>

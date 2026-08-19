@@ -150,6 +150,7 @@ export default async function ProductPage({
       {/* Detail accordions — the PDP stays short and the depth is one tap away */}
       <Container className="pb-20">
         <div className="max-w-2xl">
+          <h2 className="sr-only">Product details</h2>
           <Accordion title="How it wears" defaultOpen>
             {product.howItWears}
           </Accordion>

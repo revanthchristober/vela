@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 
 import { Price } from "@/components/commerce/Price";
 import { Button, ButtonLink } from "@/components/ui/Button";
+import { QuantitySelector } from "@/components/ui/QuantitySelector";
 import { lineTotal, useCart } from "@/lib/cart/CartProvider";
 import { pickUpsell, type UpsellCandidate } from "@/lib/cart/upsell";
 import { formatMoney } from "@/lib/utils/format";
@@ -19,7 +20,16 @@ import { formatMoney } from "@/lib/utils/format";
  * trigger, locks the page behind it, and never navigates.
  */
 export function CartDrawer({ candidates }: { candidates: readonly UpsellCandidate[] }) {
-  const { isOpen, close, lines, totals, setQuantity, removeLine, addLine } = useCart();
+  const {
+    isOpen,
+    close,
+    lines,
+    totals,
+    setQuantity,
+    removeLine,
+    addLine,
+    persistFailed,
+  } = useCart();
   const panelRef = useRef<HTMLDivElement>(null);
   const returnFocusTo = useRef<HTMLElement | null>(null);
   const reduce = useReducedMotion();
@@ -133,6 +143,13 @@ export function CartDrawer({ candidates }: { candidates: readonly UpsellCandidat
               </button>
             </header>
 
+            {persistFailed ? (
+              <p className="border-b border-line bg-clay-soft px-5 py-2 text-xs text-clay sm:px-6">
+                Your bag couldn&rsquo;t be saved to this browser — it may not be here if
+                you come back later.
+              </p>
+            ) : null}
+
             {lines.length === 0 ? (
               <div className="flex flex-1 flex-col items-start justify-center gap-6 px-5 sm:px-6">
                 <p className="font-display text-2xl">Your bag is empty.</p>
@@ -182,32 +199,12 @@ export function CartDrawer({ candidates }: { candidates: readonly UpsellCandidat
                         </div>
 
                         <div className="mt-3 flex items-center gap-4">
-                          <div className="flex items-center rounded-sm border border-line">
-                            <button
-                              type="button"
-                              onClick={() => setQuantity(line.id, line.quantity - 1)}
-                              disabled={line.quantity <= 1}
-                              className="flex size-9 items-center justify-center text-ink-muted disabled:opacity-35"
-                            >
-                              <span aria-hidden="true">−</span>
-                              <span className="sr-only">
-                                Decrease quantity of {line.productTitle}
-                              </span>
-                            </button>
-                            <span className="w-8 text-center text-sm tabular-nums">
-                              {line.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setQuantity(line.id, line.quantity + 1)}
-                              className="flex size-9 items-center justify-center text-ink-muted hover:text-ink"
-                            >
-                              <span aria-hidden="true">+</span>
-                              <span className="sr-only">
-                                Increase quantity of {line.productTitle}
-                              </span>
-                            </button>
-                          </div>
+                          <QuantitySelector
+                            value={line.quantity}
+                            onChange={(next) => setQuantity(line.id, next)}
+                            label={line.productTitle}
+                            size="sm"
+                          />
 
                           <button
                             type="button"
@@ -313,11 +310,18 @@ export function CartDrawer({ candidates }: { candidates: readonly UpsellCandidat
                   </div>
                 </dl>
 
-                <Button fullWidth size="lg" className="mt-5">
-                  Checkout
+                <Button
+                  fullWidth
+                  size="lg"
+                  className="mt-5"
+                  disabled
+                  title="Checkout is out of scope for this build — see docs/acceptance-criteria.md §2"
+                >
+                  Checkout — coming soon
                 </Button>
                 <p className="mt-3 text-center text-xs text-ink-subtle">
-                  Shipping and taxes calculated at checkout
+                  This is a portfolio build: checkout isn&rsquo;t wired up. Everything up
+                  to the bag is fully functional.
                 </p>
               </footer>
             ) : null}

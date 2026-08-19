@@ -98,8 +98,12 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Priority-loaded: this is the LCP element from lg upward. Below lg the
-            headline paints first and this lazy-loads underneath it. */}
+        {/* `priority` is unconditional, not viewport-gated: Next.js discourages
+            conditioning `priority` on breakpoint (both branches still render,
+            just hidden via CSS, so a false condition wouldn't skip the
+            preload anyway). Below lg this image is stacked under the
+            headline in source order and is still the LCP candidate there
+            too, just a smaller one. */}
         <div className="hero-media relative aspect-4/5 overflow-hidden rounded-sm bg-canvas-sunken lg:aspect-4/5">
           <Image
             src="/brand/hero.jpg"
