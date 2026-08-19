@@ -1,5 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+
+import { CartDrawer } from "@/components/commerce/CartDrawer";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { CartProvider } from "@/lib/cart/CartProvider";
+import { getUpsellCandidates } from "@/lib/cart/upsell";
+import { getCollections } from "@/lib/commerce";
+
 import "./globals.css";
 
 /* Two variable families, self-hosted from `app/fonts` — not fetched from
@@ -52,16 +60,44 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default function RootLayout({
+const ORGANISATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "VELA",
+  url: SITE_URL,
+  slogan: "Modern rituals, engineered for everyday life.",
+  description:
+    "A fictional premium D2C wellness brand, created as a self-initiated concept project.",
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Fetched once in the root layout so the header, footer and cart upsell all
+  // read the same catalogue, and no page has to remember to pass it down.
+  const [collections, upsellCandidates] = await Promise.all([
+    getCollections(),
+    getUpsellCandidates(),
+  ]);
+
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
-      <body>
+      <body className="flex min-h-dvh flex-col">
+        <script
+          type="application/ld+json"
+          // Static, author-controlled JSON. No user input reaches this string.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANISATION_JSON_LD) }}
+        />
         <a href="#main" className="sr-only-focusable">
           Skip to content
         </a>
-        {children}
+
+        <CartProvider>
+          <Header collections={collections} />
+          <div className="flex-1">{children}</div>
+          <Footer collections={collections} />
+          <CartDrawer candidates={upsellCandidates} />
+        </CartProvider>
       </body>
     </html>
   );
