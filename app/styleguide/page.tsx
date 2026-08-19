@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { cn } from "@/lib/utils/cn";
+
 export const metadata: Metadata = {
   title: "Design tokens",
   description: "The VELA token layer: colour, type, shape, elevation and motion.",
@@ -99,7 +101,10 @@ export default function StyleguidePage() {
                   {tokens.map(([name, className]) => (
                     <li key={name} className="flex items-center gap-3">
                       <span
-                        className={`size-10 shrink-0 rounded-sm border border-line ${className}`}
+                        className={cn(
+                          "size-10 shrink-0 rounded-sm border border-line",
+                          className,
+                        )}
                         aria-hidden="true"
                       />
                       <code className="text-sm text-ink-muted">{name}</code>
@@ -119,7 +124,7 @@ export default function StyleguidePage() {
                 className="flex items-baseline gap-6 border-b border-line pb-5"
               >
                 <code className="w-12 shrink-0 text-xs text-ink-subtle">{name}</code>
-                <p className={`font-display font-light ${className}`}>
+                <p className={cn("font-display font-light", className)}>
                   Modern rituals, engineered
                 </p>
               </div>
@@ -140,7 +145,10 @@ export default function StyleguidePage() {
             {RADII.map(([name, className]) => (
               <div key={name} className="text-center">
                 <div
-                  className={`size-20 border border-line-strong bg-canvas-raised ${className}`}
+                  className={cn(
+                    "size-20 border border-line-strong bg-canvas-raised",
+                    className,
+                  )}
                 />
                 <code className="mt-3 block text-xs text-ink-subtle">{name}</code>
               </div>
@@ -152,7 +160,7 @@ export default function StyleguidePage() {
           <div className="flex flex-wrap gap-8">
             {SHADOWS.map(([name, className]) => (
               <div key={name} className="text-center">
-                <div className={`size-28 rounded-md bg-canvas-raised ${className}`} />
+                <div className={cn("size-28 rounded-md bg-canvas-raised", className)} />
                 <code className="mt-3 block text-xs text-ink-subtle">{name}</code>
               </div>
             ))}
