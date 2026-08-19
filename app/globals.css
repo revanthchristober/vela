@@ -1,26 +1,256 @@
 @import "tailwindcss";
 
+/* ============================================================================
+   VELA — Design tokens
+   ----------------------------------------------------------------------------
+   Blueprint §5.2. One warm, light theme. No dark mode: the brand is built on a
+   warm off-white canvas and a single ink, and a second theme would double the
+   visual QA surface for no product benefit. Documented as an intentional
+   deviation rather than an omission.
+
+   The default Tailwind palette is disabled (`--color-*: initial`) so that no
+   stray `bg-blue-500` can ever drift into the codebase. Every colour below is
+   a decision.
+   ========================================================================== */
+
+@theme {
+  /* -- Colour ------------------------------------------------------------- */
+  --color-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Canvas — warm off-white page surfaces */
+  --color-canvas: #f6f3ee;
+  --color-canvas-raised: #fdfcfa;
+  --color-canvas-sunken: #ece6dc;
+
+  /* Ink — near-black charcoal, warmed slightly to sit on the canvas */
+  --color-ink: #171614;
+  --color-ink-muted: #55514a;
+  --color-ink-subtle: #8b857a;
+  --color-ink-inverse: #f6f3ee;
+
+  /* Accent — deep muted green */
+  --color-accent: #2e4a3b;
+  --color-accent-hover: #24382d;
+  --color-accent-soft: #e3e9e3;
+  --color-accent-ink: #f6f3ee;
+
+  /* Line — soft gray-green dividers, fields, card edges */
+  --color-line: #ded8cc;
+  --color-line-strong: #c5bdad;
+
+  /* Signal — used sparingly: sale badges, form errors, in-stock ticks */
+  --color-clay: #8a3f2c;
+  --color-clay-soft: #f2e5e0;
+  --color-moss: #4a6b46;
+
+  /* -- Typography --------------------------------------------------------- */
+  /* Two families, both variable, both self-hosted by next/font. Blueprint §10
+     calls for a minimal font strategy — this is two files, not six weights. */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Fluid editorial scale. Each step is clamp(min, preferred, max) so the
+     hierarchy holds from 360px to 1920px without a breakpoint per size. */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1.4;
+  --text-2xs--letter-spacing: 0.08em;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.5;
+  --text-xs--letter-spacing: 0.04em;
+
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.6;
+
+  --text-base: 1rem;
+  --text-base--line-height: 1.65;
+
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.6;
+
+  --text-xl: clamp(1.25rem, 0.4vw + 1.15rem, 1.375rem);
+  --text-xl--line-height: 1.45;
+
+  --text-2xl: clamp(1.5rem, 1vw + 1.25rem, 1.875rem);
+  --text-2xl--line-height: 1.3;
+
+  --text-3xl: clamp(1.875rem, 2vw + 1.4rem, 2.5rem);
+  --text-3xl--line-height: 1.2;
+  --text-3xl--letter-spacing: -0.01em;
+
+  --text-4xl: clamp(2.25rem, 3.2vw + 1.5rem, 3.5rem);
+  --text-4xl--line-height: 1.1;
+  --text-4xl--letter-spacing: -0.015em;
+
+  --text-5xl: clamp(2.75rem, 5vw + 1.5rem, 4.75rem);
+  --text-5xl--line-height: 1.05;
+  --text-5xl--letter-spacing: -0.02em;
+
+  --text-6xl: clamp(3.25rem, 7.5vw + 1.25rem, 6.5rem);
+  --text-6xl--line-height: 0.98;
+  --text-6xl--letter-spacing: -0.03em;
+
+  --tracking-eyebrow: 0.14em;
+
+  /* -- Shape -------------------------------------------------------------- */
+  /* Small-to-medium only. Nothing on this site is a pill except the badge. */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* -- Elevation ---------------------------------------------------------- */
+  /* Restrained. Used only on floating surfaces: cart drawer, dialogs, toasts. */
+  --shadow-sheet: 0 1px 2px rgb(23 22 20 / 0.04), 0 12px 32px -8px rgb(23 22 20 / 0.12);
+  --shadow-pop: 0 1px 2px rgb(23 22 20 / 0.05), 0 24px 56px -16px rgb(23 22 20 / 0.18);
+  --shadow-hairline: 0 0 0 1px rgb(23 22 20 / 0.06);
+
+  /* -- Motion ------------------------------------------------------------- */
+  /* Blueprint §9: motion is calm and purposeful. These easings are the only
+     ones the site uses; GSAP and Motion both read from them. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* -- Layout ------------------------------------------------------------- */
+  /* 360px is a supported width, not a fallback (blueprint §11 QA matrix). */
+  --breakpoint-xs: 24rem;
+  --container-page: 90rem;
+}
+
+/* Durations live outside @theme (Tailwind v4 has no --duration-* namespace).
+   Referenced as `duration-[--dur-base]` or from GSAP/Motion via getComputedStyle. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --dur-instant: 120ms;
+  --dur-fast: 200ms;
+  --dur-base: 320ms;
+  --dur-slow: 560ms;
+  --dur-reveal: 900ms;
+
+  /* Header height, used by scroll-margin and sticky offsets. */
+  --header-h: 4rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 64rem) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --header-h: 5rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================================
+   Base layer
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One focus treatment for the whole site. Visible, on-brand, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Anchors land below the sticky header. */
+  [id] {
+    scroll-margin-top: calc(var(--header-h) + 1.5rem);
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+}
+
+/* ============================================================================
+   Reduced motion — blueprint §9 and §16.
+   A global kill-switch so no future component can forget it. GSAP timelines
+   additionally check `matchMedia` before they are built.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   Utilities
+   ========================================================================== */
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ink-subtle);
+}
+
+/* Skip-link target and screen-reader-only content. */
+@utility sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+
+  &:focus-visible {
+    position: fixed;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+  }
 }
